@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tıbbi Yönetim Sistemi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e1e1e, #2d2d30);
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            color: white;
+        }
+
+        .main-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .title {
+            font-size: 1.8em;
+            margin: 0;
+            background: linear-gradient(45deg, #ff2288, #387ef0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+            transition: transform 300ms ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .title:hover {
+            transform: scale(1.05);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-icon {
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 300ms ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-icon:hover {
+            background: linear-gradient(45deg, #ff2288, #387ef0);
+            transform: scale(1.1);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 25px;
+            padding: 30px;
+            justify-items: center;
+            align-items: center;
+            flex: 1;
+        }
+
+        .card {
+            width: 252px;
+            height: 315px;
+            background: #171717;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0px 0px 20px 5px #00000088;
+            cursor: pointer;
+            border-radius: 15px;
+            transition: transform 300ms ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+        }
+
+        .card .content {
+            border-radius: 12px;
+            background: #171717;
+            width: 248.4px;
+            height: 311.4px;
+            z-index: 2;
+            padding: 25px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .card-title {
+            font-size: 19.8px;
+            font-weight: bold;
+            margin-bottom: 13px;
+            line-height: 1.3;
+            z-index: 3;
+            position: relative;
+        }
+
+        .card-description {
+            font-size: 12.6px;
+            color: #ccc;
+            margin-bottom: 18px;
+            z-index: 3;
+            position: relative;
+        }
+
+        .card-icon {
+            font-size: 45px;
+            margin-bottom: 18px;
+            opacity: 0.9;
+            z-index: 3;
+            position: relative;
+        }
+
+        .card-bg-icon {
+            position: absolute;
+            font-size: 180px;
+            opacity: 0.1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            color: white;
+            animation: rotation_bg 20000ms infinite linear;
+            animation-play-state: paused;
+        }
+
+        .card:hover .card-bg-icon {
+            animation-play-state: running;
+        }
+
+        @keyframes rotation_bg {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .content::before {
+            opacity: 0;
+            transition: opacity 300ms;
+            content: " ";
+            display: block;
+            background: white;
+            width: 4.5px;
+            height: 45px;
+            position: absolute;
+            filter: blur(45px);
+            overflow: hidden;
+        }
+
+        .card:hover .content::before {
+            opacity: 1;
+        }
+
+        .card::before {
+            opacity: 0;
+            content: " ";
+            position: absolute;
+            display: block;
+            width: 72px;
+            height: 324px;
+            background: linear-gradient(#ff2288, #387ef0);
+            transition: opacity 300ms;
+            animation: rotation_9018 8000ms infinite linear;
+            animation-play-state: paused;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+            animation-play-state: running;
+        }
+
+        .card::after {
+            position: absolute;
+            content: " ";
+            display: block;
+            width: 288px;
+            height: 360px;
+            background: #17171733;
+            backdrop-filter: blur(45px);
+        }
+
+        @keyframes rotation_9018 {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .iframe-container {
+            display: none;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 18px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 18px;
+                padding: 27px;
+            }
+
+            .title {
+                font-size: 1.6em;
+            }
+
+            .card {
+                width: 225px;
+                height: 288px;
+            }
+
+            .card .content {
+                width: 221.4px;
+                height: 284.4px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 13.5px;
+                padding: 18px;
+            }
+            
+            .card {
+                width: 180px;
+                height: 225px;
+            }
+            
+            .card .content {
+                width: 176.4px;
+                height: 221.4px;
+                padding: 18px;
+            }
+            
+            .card-bg-icon {
+                font-size: 108px;
+            }
+            
+            .title {
+                font-size: 1.4em;
+            }
+
+            .nav-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 14.4px;
+            }
+
+            .header-nav {
+                gap: 9px;
+            }
+
+            .header {
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .title {
+                font-size: 1.2em;
+            }
+
+            .nav-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 12.8px;
+            }
+
+            .header-nav {
+                gap: 7px;
+            }
+
+            .card {
+                width: 153px;
+                height: 198px;
+            }
+
+            .card .content {
+                width: 149.4px;
+                height: 194.4px;
+                padding: 13.5px;
+            }
+
+            .card-icon {
+                font-size: 36px;
+                margin-bottom: 13.5px;
+            }
+
+            .card-title {
+                font-size: 16.2px;
+            }
+
+            .card-description {
+                font-size: 10.8px;
+            }
+
+            .card-bg-icon {
+                font-size: 90px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 18px;
+                padding: 18px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px;
+            }
+
+            .title {
+                font-size: 1.3em;
+                text-align: center;
+            }
+
+            .header-nav {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .card {
+                width: 100%;
+                max-width: 270px;
+                height: 252px;
+                margin: 0 auto;
+            }
+
+            .card .content {
+                width: calc(100% - 3.6px);
+                height: calc(100% - 3.6px);
+                padding: 22.5px;
+            }
+
+            .card-icon {
+                font-size: 40.5px;
+            }
+
+            .card-title {
+                font-size: 18px;
+            }
+
+            .card-description {
+                font-size: 11.7px;
+            }
+
+            .card-bg-icon {
+                font-size: 126px;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .title {
+                font-size: 1.1em;
+            }
+
+            .nav-icon {
+                width: 26px;
+                height: 26px;
+                font-size: 11.2px;
+            }
+
+            .header-nav {
+                gap: 5.4px;
+            }
+
+            .card {
+                height: 234px;
+            }
+
+            .card-icon {
+                font-size: 36px;
+                margin-bottom: 10.8px;
+            }
+
+            .card-title {
+                font-size: 16.2px;
+                margin-bottom: 9px;
+            }
+
+            .card-description {
+                font-size: 10.8px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .title {
+                font-size: 1em;
+            }
+
+            .header {
+                padding: 10.8px;
+            }
+
+            .nav-icon {
+                width: 24px;
+                height: 24px;
+                font-size: 10.4px;
+            }
+
+            .card {
+                height: 216px;
+            }
+
+            .card .content {
+                padding: 18px;
+            }
+
+            .card-icon {
+                font-size: 31.5px;
+                margin-bottom: 9px;
+            }
+
+            .card-title {
+                font-size: 14.4px;
+                margin-bottom: 7.2px;
+            }
+
+            .card-description {
+                font-size: 9.9px;
+            }
+
+            .card-bg-icon {
+                font-size: 108px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="content-area">
+            <div class="header">
+                <h1 class="title" onclick="showDashboard()">Tıbbi Yönetim Sistemi</h1>
+                <div class="header-nav">
+                    <div class="nav-icon" onclick="openPage('lokalhastasiekleme.html')" title="Lokal Hastası Ekleme">👤</div>
+                    <div class="nav-icon" onclick="openPage('lokalhastasidefteri.html')" title="Lokal Hastası Defteri">📋</div>
+                    <div class="nav-icon" onclick="openPage('ameliyathastasiekleme.html')" title="Ameliyat Hastası Ekleme">⚕️</div>
+                    <div class="nav-icon" onclick="openPage('ameliyathastasidefteri.html')" title="Ameliyat Hastası Defteri">🏥</div>
+                    <div class="nav-icon" onclick="openPage('randevutakvimi.html')" title="Randevu Takvimi">📅</div>
+                </div>
+            </div>
+
+            <div id="dashboard" class="dashboard">
+                <div class="card" onclick="openPage('lokalhastasiekleme.html')">
+                    <div class="card-bg-icon">👤</div>
+                    <div class="content">
+                        <div class="card-icon">👤</div>
+                        <div class="card-title">Lokal Hastası Ekleme</div>
+                        <div class="card-description">Yeni lokal hasta kaydı oluşturun</div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="openPage('lokalhastasidefteri.html')">
+                    <div class="card-bg-icon">📋</div>
+                    <div class="content">
+                        <div class="card-icon">📋</div>
+                        <div class="card-title">Lokal Hastası Defteri</div>
+                        <div class="card-description">Lokal hasta kayıtlarını görüntüleyin</div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="openPage('ameliyathastasiekleme.html')">
+                    <div class="card-bg-icon">⚕️</div>
+                    <div class="content">
+                        <div class="card-icon">⚕️</div>
+                        <div class="card-title">Ameliyat Hastası Ekleme</div>
+                        <div class="card-description">Yeni ameliyat hastası kaydı oluşturun</div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="openPage('ameliyathastasidefteri.html')">
+                    <div class="card-bg-icon">🏥</div>
+                    <div class="content">
+                        <div class="card-icon">🏥</div>
+                        <div class="card-title">Ameliyat Hastası Defteri</div>
+                        <div class="card-description">Ameliyat hasta kayıtlarını görüntüleyin</div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="openPage('randevutakvimi.html')">
+                    <div class="card-bg-icon">📅</div>
+                    <div class="content">
+                        <div class="card-icon">📅</div>
+                        <div class="card-title">Randevu Takvimi</div>
+                        <div class="card-description">Randevu planlaması ve takibi</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="iframe-container" class="iframe-container">
+                <iframe id="content-iframe" src="" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openPage(pageName) {
+            const dashboard = document.getElementById('dashboard');
+            const iframeContainer = document.getElementById('iframe-container');
+            const iframe = document.getElementById('content-iframe');
+            
+            dashboard.style.display = 'none';
+            iframeContainer.style.display = 'block';
+            iframe.src = pageName;
+        }
+
+        function showDashboard() {
+            const contentArea = document.querySelector('.content-area');
+            const dashboard = document.getElementById('dashboard');
+            const iframeContainer = document.getElementById('iframe-container');
+            const iframe = document.getElementById('content-iframe');
+            
+            dashboard.style.display = 'grid';
+            iframeContainer.style.display = 'none';
+            iframe.src = '';
+        }
+
+        window.addEventListener('message', function(event) {
+            if (event.data === 'goHome') {
+                showDashboard();
+            }
+        });
+    </script>
+</body>
+</html>
